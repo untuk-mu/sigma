@@ -1,0 +1,133 @@
+local inputFileName = arg[1]
+local outputFileName = arg[2]
+
+if not inputFileName or not outputFileName then
+    print("Usage: lua cli.lua <input_file.lua> <output_file.lua>")
+    os.exit(1)
+end
+
+-- Read the input file
+local file, err = io.open(inputFileName, "r")
+if not file then
+    print("Error opening input file: " .. err)
+    os.exit(1)
+end
+
+local script = file:read("*all")
+file:close()
+
+local numlength = 50
+local ln = 50
+local fg = 50
+local kk = 50
+
+math.randomseed(os.time())
+
+local string_list = {
+    "Makan dulu", "Decrypt = Gay", "Bukan Fork Ivyno", "Never watch skibidi toilet",
+    "Moonsec di growtopia kapan ya", "Really Sucks", "Groutopiya obfuscator", "Yanh Baca Item",
+    "Growtopia == trash", "print(kalian gay)", "gaada key nya",
+    "When working loadstring with link for us?", "Sakit Hati Aku Wal",
+    "Jangan Hapus Yang paling atas atau sc nya ngebug", "heheboi", "mewjng",
+    "Skidibi", "Bukan Fork Yasucator", "AAAAAAA", "print(Gay)",
+    "Messi Goat", "Main Roblok yuk", "Nick Ku Rentlz", "jangan pernah main ml di jam 3 pagi",
+    "Ikan Bandeng", "Ff", "Ngomong Apa",
+    "Makan Eek", "Skibidi Toilet", "Même dans un sommeil éternel", "J'étais censé t'aimer mais j'ai vu l'averse",
+    "J'ai cligné des yeux, tu n'étais plus la même", "Est-ce que je t'aime? J'sais pas si je t'aime"
+}
+
+local function getRandomStringFromTable(tbl)
+    local randnum = math.random(1, #tbl)
+    return tbl[randnum]
+end
+
+local obfuscated_script = "_, Obfuscated_by_Lienscope, Discord = 'discord.com/invite'\nif Obfuscated_by_Lienscope then end local v0c04ch5 = \"This file is obfuscated using Lienscope V1\";"
+
+local encoded = script:gsub(".", function(bb) return "\\" .. bb:byte() end)
+
+local function addVarToString()
+    obfuscated_script = obfuscated_script .. " if Lienscope_" .. math.random(1, 1500) .. " == " .. math.random(1, 1500) .. " then " .. " local Lienscope_" .. math.random(1, 1500) .. " = \"" .. getRandomStringFromTable(string_list) .. "\" end"
+end
+
+local function addStringVarToString()
+    obfuscated_script = obfuscated_script .. " local Lienscope_" .. math.random(1, 1500) .. "=\"" .. getRandomStringFromTable(string_list) .. "\""
+end
+
+local function addFuncToString()
+    obfuscated_script = obfuscated_script .. " function Lienscope_" .. math.random(1, 1500) .. "() return \"" .. getRandomStringFromTable(string_list) .. "\" end"
+end
+
+local function kee()
+    obfuscated_script = obfuscated_script .. " function Lienscope_" .. math.random(1, 1500) .. "() return \"" .. getRandomStringFromTable(string_list) .. "\" end"
+end
+
+local function randomString(length)
+    local chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    local randomStr = ""
+    for i = 1, length do
+        local randIndex = math.random(1, #chars)
+        randomStr = randomStr .. chars:sub(randIndex, randIndex)
+    end
+    return randomStr
+end
+
+local function locals()
+    obfuscated_script = obfuscated_script .. "local Lienscope_0 = 15;"
+    obfuscated_script = obfuscated_script .. "local Lienscope_1 = 109;"
+    obfuscated_script = obfuscated_script .. "local Lienscope_2 = 820;"
+end
+
+locals()
+
+for i = 1, numlength do
+    addVarToString()
+end
+
+local ep = randomString(20)
+obfuscated_script = obfuscated_script .. " " .. ep .. " = load;"
+
+for i = 1, ln do
+    addStringVarToString()
+end
+
+os.execute("luac -o luac.out " .. inputFileName)
+
+local bytecode_file, bytecode_err = io.open("luac.out", "rb")
+if not bytecode_file then
+    print("Error opening bytecode file: " .. bytecode_err)
+    os.exit(1)
+end
+
+local bytecode = bytecode_file:read("*all")
+bytecode_file:close()
+
+local encoded_bytecode = bytecode:gsub(".", function(bb) return "\\" .. bb:byte() end)
+obfuscated_script = obfuscated_script .. " " .. ep .. "(\"" .. encoded_bytecode .. "\")();"
+
+for i = 1, fg do
+    addFuncToString()
+end
+
+for i = 1, kk do
+    kee()
+end
+
+-- Write the obfuscated script to the output file
+local outFile, err = io.open(outputFileName, "w")
+if not outFile then
+    print("Error opening output file: " .. err)
+    os.exit(1)
+end
+
+outFile:write(obfuscated_script)
+outFile:close()
+
+print("Obfuscation complete! Output written to " .. outputFileName)
+function delay(seconds)
+    os.execute("sleep " .. tonumber(seconds))
+end
+delay(1)
+os.remove("luac.out")
+
+
+
